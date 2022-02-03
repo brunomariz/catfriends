@@ -4,7 +4,7 @@ import CardList from "../components/CardList";
 import "tachyons";
 import React from "react";
 import SearchField from "../components/SearchField";
-import SideScroll from "../components/SideScroll";
+import ScrollBox from "../components/ScrollBox";
 
 class App extends React.Component {
   constructor() {
@@ -40,9 +40,9 @@ class App extends React.Component {
         <h1 className=''>CATFRIENDS</h1>
         <SearchField on_change={this.on_change}></SearchField>
 
-        <SideScroll>
+        <ScrollBox>
           <CardList users={this.get_user()}></CardList>
-        </SideScroll>
+        </ScrollBox>
       </div>
     );
   }
