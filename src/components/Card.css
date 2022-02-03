@@ -1,0 +1,8 @@
+.horizontal-scroll {
+  display: flex;
+  overflow-x: scroll;
+}
+
+img {
+  height: 10rem;
+}
