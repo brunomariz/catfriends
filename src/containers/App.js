@@ -23,12 +23,16 @@ const mapDispatchToProps = (dispatch) => {
 const App = (props) => {
   // Define states
   // const [searchField, setSearchField] = useState("");
-  const [usersState, setUsersState] = useState(users);
+  const [usersState, setUsersState] = useState([]);
   const { searchField, onSearchChange } = props;
 
-  // useEffect(() => {
-  //   console.log(props);
-  // }, []);
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((users) => {
+        setUsersState(users);
+      });
+  }, []);
 
   // const on_change = (event) => {
   //   setSearchField(event.target.value);
