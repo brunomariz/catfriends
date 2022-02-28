@@ -1,19 +1,38 @@
 import "./App.css";
-import { users } from "../data/users";
-import CardList from "../components/CardList";
+import { connect } from "react-redux";
 import "tachyons";
 import React, { useState, useEffect } from "react";
+
+import { setSearchField } from "../actions";
+import { users } from "../data/users";
+import CardList from "../components/CardList";
 import SearchField from "../components/SearchField";
 import ScrollBox from "../components/ScrollBox";
 
-const App = () => {
-  // Define states
-  const [searchField, setSearchField] = useState("");
-  const [usersState, setUsersState] = useState(users);
-
-  const on_change = (event) => {
-    setSearchField(event.target.value);
+const mapStateToProps = (state) => {
+  return {
+    searchField: state.searchField,
   };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+  };
+};
+
+const App = (props) => {
+  // Define states
+  // const [searchField, setSearchField] = useState("");
+  const [usersState, setUsersState] = useState(users);
+  const { searchField, onSearchChange } = props;
+
+  // useEffect(() => {
+  //   console.log(props);
+  // }, []);
+
+  // const on_change = (event) => {
+  //   setSearchField(event.target.value);
+  // };
 
   const get_user = () => {
     // Filter users whose username includes the searchfield value
@@ -36,9 +55,9 @@ const App = () => {
   };
 
   return (
-    <div className='tc'>
-      <h1 className=''>CATFRIENDS</h1>
-      <SearchField on_change={on_change}></SearchField>
+    <div className="tc">
+      <h1 className="">CATFRIENDS</h1>
+      <SearchField on_change={onSearchChange}></SearchField>
       <ScrollBox>
         <CardList users={get_user()}></CardList>
       </ScrollBox>
@@ -46,4 +65,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
