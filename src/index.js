@@ -4,10 +4,17 @@ import "./index.css";
 import App from "./containers/App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider, connect } from "react-redux";
-import { createStore } from "redux";
-import { searchUsers } from "./reducers";
+import { createStore, applyMiddleware, combineReducers } from "redux";
+import { searchUsers, requestUsers } from "./reducers";
+import { createLogger } from "redux-logger";
+import thunkMiddleware from "redux-thunk";
 
-const store = createStore(searchUsers);
+const logger = createLogger();
+const rootReducer = combineReducers({ searchUsers, requestUsers });
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunkMiddleware, logger)
+);
 
 ReactDOM.render(
   <React.StrictMode>

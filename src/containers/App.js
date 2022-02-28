@@ -8,47 +8,37 @@ import { users } from "../data/users";
 import CardList from "../components/CardList";
 import SearchField from "../components/SearchField";
 import ScrollBox from "../components/ScrollBox";
+import { requestInitialUsers } from "../actions";
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
-    searchField: state.searchField,
+    searchField: state.searchUsers.searchField,
+    users: state.requestUsers.users,
+    isPending: state.requestUsers.isPending,
+    error: state.requestUsers.error,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onRequestUsers: () => dispatch(requestInitialUsers()),
   };
 };
 
 const App = (props) => {
-  // Define states
-  // const [searchField, setSearchField] = useState("");
-  const [usersState, setUsersState] = useState([]);
-  const { searchField, onSearchChange } = props;
+  const { searchField, onSearchChange, onRequestUsers, users, isPending } =
+    props;
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((users) => {
-        setUsersState(users);
-      });
+    onRequestUsers();
   }, []);
-
-  // const on_change = (event) => {
-  //   setSearchField(event.target.value);
-  // };
 
   const get_user = () => {
     // Filter users whose username includes the searchfield value
-    let filtered_users = usersState.filter((item) =>
+    let filtered_users = users.filter((item) =>
       item.username.toLowerCase().includes(searchField.toLowerCase())
     );
-
-    //  Return the searchfield if no users include the searchfield
-    // if (filtered_users.length == 0) {
-    //   console.log(searchField);
-    //   return [{ username: searchField }];
-    // }
 
     // Add new user with username equal to the searchfield to the filtered users array
     if (searchField.length > 0) {
@@ -62,9 +52,15 @@ const App = (props) => {
     <div className="tc">
       <h1 className="">CATFRIENDS</h1>
       <SearchField on_change={onSearchChange}></SearchField>
-      <ScrollBox>
-        <CardList users={get_user()}></CardList>
-      </ScrollBox>
+      {isPending ? (
+        <ScrollBox>
+          <div className="ma2 pa2">Fetching example users...</div>
+        </ScrollBox>
+      ) : (
+        <ScrollBox>
+          <CardList users={get_user()}></CardList>
+        </ScrollBox>
+      )}
     </div>
   );
 };
